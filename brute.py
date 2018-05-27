@@ -2,29 +2,31 @@
 
 import requests
 import time
+import sys
 
+def argument_check():
+    if(len(sys.argv) != 2):
+        print("Please enter a domain to check")
+        exit(1)
+    else:
+        return sys.argv[1]
 
-def sub_checker(sub):
+def sub_checker(sub,domain):
     url = "https://" + sub + domain
     #sleep for variable amount if connection refused
-    timeout = 1
-    r = ''
-    while r == '':
-        try:
-            r = requests.get(url)
-            break
-        except:
-            time.sleep(timeout)
-            timeout = timeout + 1
-            continue
-        if(r.status_code != 404):
-            print(url,end=" ")
-            print(r.status_code)
-            return
+    try:
+        r = requests.head(url)
+    except requests.exceptions.RequestException as e:
+        return
 
+    if(r.status_code != 404):
+        print(url,end=" ")
+        print(r.status_code)
+        return
 
 if __name__ == "__main__":
-    domain = ".ns.agency"
+    domain = argument_check()
+    domain = "." + domain
 
     letters = 'abcdefghijklmnopqrstuvwxyz'
     words_list = []
@@ -37,7 +39,6 @@ if __name__ == "__main__":
             a = [x+i for i in letters for x in a]
         words_list = words_list + a
 
-
     #actually test domain
     for word in words_list:
-        sub_checker(word)
+        sub_checker(word,domain)
