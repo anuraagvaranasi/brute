@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
+import multiprocessing
 import requests
 import time
 import sys
+from multiprocessing.dummy import Pool as ThreadPool 
 
 def argument_check():
     if(len(sys.argv) != 2):
@@ -25,6 +27,7 @@ def sub_checker(sub,domain):
         return
 
 if __name__ == "__main__":
+
     domain = argument_check()
     domain = "." + domain
 
@@ -39,6 +42,5 @@ if __name__ == "__main__":
             a = [x+i for i in letters for x in a]
         words_list = words_list + a
 
-    #actually test domain
     for word in words_list:
         sub_checker(word,domain)
